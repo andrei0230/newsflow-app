@@ -1,0 +1,39 @@
+package users
+
+import (
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
+)
+
+type user struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type UserStorage struct {
+	db *sql.DB
+}
+
+func NewUserStorage(db *sql.DB) *UserStorage {
+	return &UserStorage{db: db}
+}
+
+func (u *UserStorage) geAllUsers() ([]user, error) {
+	rows, err := u.db.Query("SELECT * FROM users")
+	if err != nil {
+		panic(err)
+	}
+	users := make([]user, 0)
+
+	for rows.Next() {
+		var user user
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
+			panic(err)
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}
