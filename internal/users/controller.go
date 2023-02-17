@@ -19,6 +19,14 @@ func (u *UserController) getAll(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-
 	c.IndentedJSON(http.StatusOK, users)
+}
+
+func (u *UserController) getByID(c *gin.Context) {
+	id := c.Param("id")
+	user, err := u.storage.getUserByID(id)
+	if err != nil {
+		panic(err)
+	}
+	c.IndentedJSON(http.StatusOK, user)
 }

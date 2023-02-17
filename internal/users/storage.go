@@ -7,7 +7,7 @@ import (
 )
 
 type user struct {
-	ID    int    `json:"id"`
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -21,12 +21,11 @@ func NewUserStorage(db *sql.DB) *UserStorage {
 }
 
 func (u *UserStorage) geAllUsers() ([]user, error) {
-	rows, err := u.db.Query("SELECT * FROM users")
+	rows, err := u.db.Query("select * from users")
 	if err != nil {
 		panic(err)
 	}
 	users := make([]user, 0)
-
 	for rows.Next() {
 		var user user
 		if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
@@ -34,6 +33,15 @@ func (u *UserStorage) geAllUsers() ([]user, error) {
 		}
 		users = append(users, user)
 	}
-
 	return users, nil
+}
+
+func (u *UserStorage) getUserByID(id string) (user, error) {
+	var target user
+	row := u.db.QueryRow("select * from users where ID = ?", id)
+	err := row.Scan(&target.ID, &target.Name, &target.Email)
+	if err != nil {
+		panic(err)
+	}
+	return target, nil
 }
