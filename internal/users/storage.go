@@ -45,3 +45,11 @@ func (u *UserStorage) getUserByID(id int) (user, error) {
 	}
 	return target, nil
 }
+
+func (u *UserStorage) createUser(name string, email string) error {
+	_, err := u.db.Exec("insert into users (Name, Email) values(?, ?)", name, email)
+	if err != nil {
+		panic(err)
+	}
+	return nil
+}

@@ -7,4 +7,5 @@ import (
 func SetRoutes(router *gin.Engine, controller *UserController) {
 	router.GET("/users", controller.getAll)
 	router.GET("/users/id/:id", controller.getByID)
+	router.POST("/users/add/:name/:email", controller.addUser)
 }
