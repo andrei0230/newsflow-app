@@ -34,3 +34,12 @@ func (u *UserController) getByID(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusOK, user)
 }
+
+func (u *UserController) addUser(c *gin.Context) {
+	name := c.Param("name")
+	email := c.Param("email")
+	err := u.storage.createUser(name, email)
+	if err != nil {
+		panic(err)
+	}
+}
