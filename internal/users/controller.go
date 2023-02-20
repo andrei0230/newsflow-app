@@ -2,6 +2,7 @@ package users
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,10 @@ func (u *UserController) getAll(c *gin.Context) {
 }
 
 func (u *UserController) getByID(c *gin.Context) {
-	id := c.Param("id")
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		panic(err)
+	}
 	user, err := u.storage.getUserByID(id)
 	if err != nil {
 		panic(err)

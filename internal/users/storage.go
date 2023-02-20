@@ -7,7 +7,7 @@ import (
 )
 
 type user struct {
-	ID    string `json:"id"`
+	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -36,7 +36,7 @@ func (u *UserStorage) geAllUsers() ([]user, error) {
 	return users, nil
 }
 
-func (u *UserStorage) getUserByID(id string) (user, error) {
+func (u *UserStorage) getUserByID(id int) (user, error) {
 	var target user
 	row := u.db.QueryRow("select * from users where ID = ?", id)
 	err := row.Scan(&target.ID, &target.Name, &target.Email)
