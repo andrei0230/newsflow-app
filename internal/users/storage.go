@@ -53,3 +53,11 @@ func (u *UserStorage) createUser(name string, email string) error {
 	}
 	return nil
 }
+
+func (u *UserStorage) deleteUser(id int) error {
+	_, err := u.db.Exec("delete from users where ID = ?", id)
+	if err != nil {
+		panic(err)
+	}
+	return nil
+}
