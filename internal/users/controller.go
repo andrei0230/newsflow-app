@@ -43,3 +43,15 @@ func (u *UserController) addUser(c *gin.Context) {
 		panic(err)
 	}
 }
+
+func (u *UserController) removeUser(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		panic(err)
+	}
+	err = u.storage.deleteUser(id)
+	if err != nil {
+		panic(err)
+	}
+
+}
