@@ -36,9 +36,11 @@ func (u *UserController) getByID(c *gin.Context) {
 }
 
 func (u *UserController) addUser(c *gin.Context) {
-	name := c.Param("name")
-	email := c.Param("email")
-	err := u.storage.createUser(name, email)
+	var newUser user
+	if err := c.BindJSON(&newUser); err != nil {
+		panic(err)
+	}
+	err := u.storage.createUser(newUser.Name, newUser.Email)
 	if err != nil {
 		panic(err)
 	}
@@ -53,5 +55,4 @@ func (u *UserController) removeUser(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-
 }
