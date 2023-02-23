@@ -20,7 +20,8 @@ func (u *UserController) getAll(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.IndentedJSON(http.StatusOK, users)
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, users)
 }
 
 func (u *UserController) getByID(c *gin.Context) {
@@ -32,6 +33,7 @@ func (u *UserController) getByID(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+	c.Header("Content-Type", "application/json")
 	c.IndentedJSON(http.StatusOK, user)
 }
 
