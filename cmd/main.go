@@ -15,7 +15,6 @@ func main() {
 	defer storage.StopSql(db)
 	userStorage := users.NewUserStorage(db)
 	userController := users.NewUserController(userStorage)
-
 	users.SetRoutes(app, userController)
 	app.Run()
 }
