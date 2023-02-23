@@ -15,6 +15,7 @@ func main() {
 	defer storage.StopSql(db)
 	userStorage := users.NewUserStorage(db)
 	userController := users.NewUserController(userStorage)
+	users.SetCORS(app)
 	users.SetRoutes(app, userController)
-	app.Run()
+	app.Run(":8080")
 }
