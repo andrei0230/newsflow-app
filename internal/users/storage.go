@@ -17,19 +17,21 @@ type UserStorage struct {
 }
 
 func NewUserStorage(db *sql.DB) *UserStorage {
-	return &UserStorage{db: db}
+	return &UserStorage{
+		db: db,
+	}
 }
 
 func (u *UserStorage) geAllUsers() ([]user, error) {
 	rows, err := u.db.Query("select * from users")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	users := make([]user, 0)
 	for rows.Next() {
 		var user user
 		if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
-			panic(err)
+			return nil, err
 		}
 		users = append(users, user)
 	}
@@ -41,7 +43,7 @@ func (u *UserStorage) getUserByID(id int) (user, error) {
 	row := u.db.QueryRow("select * from users where ID = ?", id)
 	err := row.Scan(&target.ID, &target.Name, &target.Email)
 	if err != nil {
-		panic(err)
+		return user{}, err
 	}
 	return target, nil
 }
@@ -49,7 +51,7 @@ func (u *UserStorage) getUserByID(id int) (user, error) {
 func (u *UserStorage) createUser(name string, email string) error {
 	_, err := u.db.Exec("insert into users (Name, Email) values(?, ?)", name, email)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }
@@ -57,7 +59,7 @@ func (u *UserStorage) createUser(name string, email string) error {
 func (u *UserStorage) deleteUser(id int) error {
 	_, err := u.db.Exec("delete from users where ID = ?", id)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }
