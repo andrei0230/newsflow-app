@@ -18,7 +18,8 @@ func NewUserController(storage *UserStorage) *UserController {
 func (u *UserController) getAll(c *gin.Context) {
 	users, err := u.storage.geAllUsers()
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 	c.Header("Content-Type", "application/json")
 	c.JSON(http.StatusOK, users)
@@ -27,34 +28,40 @@ func (u *UserController) getAll(c *gin.Context) {
 func (u *UserController) getByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 	user, err := u.storage.getUserByID(id)
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 	c.Header("Content-Type", "application/json")
-	c.IndentedJSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }
 
 func (u *UserController) addUser(c *gin.Context) {
 	var newUser user
 	if err := c.BindJSON(&newUser); err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 	err := u.storage.createUser(newUser.Name, newUser.Email)
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 }
 
 func (u *UserController) removeUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 	err = u.storage.deleteUser(id)
 	if err != nil {
-		panic(err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 }
