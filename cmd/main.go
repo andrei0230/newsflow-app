@@ -1,23 +1,14 @@
 package main
 
 import (
-	"log"
-
-	"github.com/andrei0230/newsflow-app/internal/storage"
-	"github.com/andrei0230/newsflow-app/internal/users"
-	"github.com/gin-gonic/gin"
+	"github.com/andrei0230/newsflow-app/internal/config"
 )
 
 func main() {
-	app := gin.Default()
-	db, err := storage.StartMySql()
+	app, db, err := config.SetupApp()
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
-	defer storage.StopSql(db)
-	userStorage := users.NewUserStorage(db)
-	userController := users.NewUserController(userStorage)
-	users.SetCORS(app)
-	users.SetRoutes(app, userController)
+	defer config.StopDB(db)
 	app.Run(":8080")
 }
