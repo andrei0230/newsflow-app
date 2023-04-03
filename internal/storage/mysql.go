@@ -12,7 +12,6 @@ func StartMySql() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return database, nil
 }
 
